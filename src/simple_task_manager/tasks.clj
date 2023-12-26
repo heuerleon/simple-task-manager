@@ -17,6 +17,9 @@
     (new-task-id tasks)
     new-task))
 
+(defn task-exists [tasks id]
+  (contains? tasks id))
+
 (defn delete-task [tasks id]
   (dissoc tasks id))
 

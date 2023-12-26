@@ -1,13 +1,30 @@
 (ns simple-task-manager.core
   (:require [simple-task-manager.tasks :as tasks]))
 
+(def tasks-state (atom {}))
+
 (defn -main []
-  (let [task-1 (tasks/create-task "Test" 2)
-        task-2 (tasks/create-task "Test2" 1)
-        task-3 (tasks/create-task "Test3" 2)
-        all-tasks (-> {}
-                      (tasks/add-task task-1)
-                      (tasks/add-task task-2)
-                      (tasks/add-task task-3)
-                      (tasks/delete-task 1))]
-    (tasks/get-tasks all-tasks)))
+  (loop []
+    (println "Available commands: create, delete, list")
+    (let [cmd (read-line)]
+      (case cmd
+        "create" (do
+                   (print "Enter description: ")
+                   (let [desc (read-line)]
+                     (print "Enter priority (1-4): ")
+                     (let [prio (read-line)]
+                       (swap! tasks-state tasks/add-task (tasks/create-task desc prio))))
+                   (recur))
+        "delete" (do
+                   (print "Enter task id to delete: ")
+                   (let [id (read-line)]
+                     (swap! tasks-state tasks/delete-task id))
+                   (recur))
+        "list" (do
+                 (tasks/get-tasks @tasks-state)
+                 (recur))
+        "quit" (println "Bye!")
+        (do
+          (println "Wrong command, try again!")
+          (recur))
+        ))))
