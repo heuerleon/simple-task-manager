@@ -2,8 +2,11 @@
 
 (defrecord Task [description priority])
 
+(defn check-prio [prio]
+  (contains? (set [1 2 3 4]) prio))
+
 (defn create-task [description priority]
-  (if (contains? (set [1 2 3 4]) priority)
+  (if (check-prio priority)
     (->Task description priority)
     (throw (Throwable. "Priority must be within 1 and 4"))))
 
@@ -17,6 +20,9 @@
     (new-task-id tasks)
     new-task))
 
+(defn task-exists [tasks id]
+  (contains? tasks id))
+
 (defn delete-task [tasks id]
   (dissoc tasks id))
 
@@ -26,3 +32,6 @@
 (defn get-tasks [tasks]
   (doseq [task tasks]
     (println (prettify-task task))))
+
+(defn task-amount [tasks]
+  (count tasks))
