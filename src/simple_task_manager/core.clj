@@ -48,4 +48,5 @@
 
 (defn -main []
   (loop [tasks {}]
-    (recur (command-input tasks))))
+    (let [output (command-input tasks)]
+      (if (not(= output nil)) (recur output)))))

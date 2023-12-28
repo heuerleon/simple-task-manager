@@ -29,8 +29,14 @@
 (defn prettify-task [[id task]]
   (str "(" id ") Description: " (:description task) ", P" (:priority task)))
 
+(defn sort-by-prio [tasks]
+  (into (sorted-map-by (fn [k1 k2]
+                   (compare (get-in tasks [k1 :priority])
+                            (get-in tasks [k2 :priority]))))
+                 tasks))
+
 (defn get-tasks [tasks]
-  (doseq [task tasks]
+  (doseq [task (sort-by-prio tasks)]
     (println (prettify-task task))))
 
 (defn task-amount [tasks]

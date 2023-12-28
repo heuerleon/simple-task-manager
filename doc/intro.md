@@ -10,7 +10,7 @@ Develop a basic application to manage daily tasks. This project will allow you t
 - **Data Storage**: Use a simple in-memory data structure (like a vector or map) to store tasks. No need for a database.
 
 ## More Features to be completed:
-- [ ] **Task Prioritization**: Add a priority level to each task (e.g., high, medium, low). Modify your listing function to sort tasks based on their priority.
+- [x] **Task Prioritization**: Add a priority level to each task (e.g., high, medium, low). Modify your listing function to sort tasks based on their priority.
 - [ ] **Due Dates for Tasks**: Implement functionality to add due dates to tasks. Extend the listing function to show overdue tasks in a different color or format.
 - [ ] **Task Editing**: Allow the user to edit an existing task’s description, priority, or due date.
 - [ ] **Task Completion Status**: Add a feature to mark tasks as completed instead of deleting them. Provide an option to view either all tasks or only active/uncompleted tasks.
