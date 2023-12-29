@@ -48,6 +48,18 @@
         (println "Task with id" id "does not exist")
         tasks))))
 
+(defn complete-command [tasks]
+  (print "Enter task id to complete: ")
+  (flush)
+  (let [id (Integer/parseInt (read-line))]
+    (if (tasks/task-exists tasks id)
+      (do
+        (println "Completed task with id" id)
+        (tasks/complete-task tasks id))
+      (do
+        (println "Task with id" id "does not exist")
+        tasks))))
+
 (defn delete-command [tasks]
   (print "Enter task id to delete: ")
   (flush)
@@ -63,15 +75,20 @@
 (defn list-command [tasks]
   (if (= 0 (tasks/task-amount tasks))
     (println "No tasks created yet.")
-    (tasks/get-tasks tasks))
+    (do
+      (print "Only view incomplete tasks? [Y/n]: ")
+      (flush)
+      (let [only-incomplete (read-line)]
+        (tasks/get-tasks tasks (= only-incomplete "n")))))
   tasks)
 
 (defn command-input [tasks]
-  (println "Available commands: create, edit, delete, list, quit")
+  (println "Available commands: create, edit, complete, delete, list, quit")
   (let [cmd (read-line)]
     (case cmd
       "create" (create-command tasks)
       "edit" (edit-command tasks)
+      "complete" (complete-command tasks)
       "delete" (delete-command tasks)
       "list" (list-command tasks)
       "quit" (println "Bye!")
