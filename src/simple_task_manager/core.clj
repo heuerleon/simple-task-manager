@@ -1,5 +1,7 @@
 (ns simple-task-manager.core
-  (:require [simple-task-manager.tasks :as tasks]))
+  (:require [simple-task-manager.tasks :as tasks])
+  (:import (java.time LocalDateTime)
+           (java.time.format DateTimeFormatter)))
 
 (defn create-command [tasks]
   (print "Enter description: ")
@@ -10,8 +12,11 @@
     (let [prio (Integer/parseInt (read-line))]
       (if (tasks/check-prio prio)
         (do
-          (println "Created task" desc "with priority" prio)
-          (tasks/add-task tasks (tasks/create-task desc prio)))
+          (print "Enter due date (example: 2011-12-03T10:15): ")
+          (flush)
+          (let [due (LocalDateTime/parse (read-line))]
+          (println "Created task" desc "with priority" prio "and due date" (.format due (DateTimeFormatter/ISO_DATE_TIME)))
+          (tasks/add-task tasks (tasks/create-task desc prio due))))
         (do
           (println "Priority must be within 1 and 4")
           tasks)))))

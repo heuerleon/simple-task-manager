@@ -1,13 +1,14 @@
-(ns simple-task-manager.tasks)
+(ns simple-task-manager.tasks
+  (:import (java.time LocalDateTime)))
 
-(defrecord Task [description priority])
+(defrecord Task [description priority due-date])
 
 (defn check-prio [prio]
   (contains? (set [1 2 3 4]) prio))
 
-(defn create-task [description priority]
-  (if (check-prio priority)
-    (->Task description priority)
+(defn create-task [desc prio due]
+  (if (check-prio prio)
+    (->Task desc prio due)
     (throw (Throwable. "Priority must be within 1 and 4"))))
 
 (defn new-task-id [tasks]
@@ -26,8 +27,8 @@
 (defn delete-task [tasks id]
   (dissoc tasks id))
 
-(defn prettify-task [[id task]]
-  (str "(" id ") Description: " (:description task) ", P" (:priority task)))
+(defn prettify-task [id task]
+  (str "(" id ") Description: " (:description task) ", P" (:priority task) ", due: " (:due-date task)))
 
 (defn sort-by-prio [tasks]
   (into (sorted-map-by (fn [k1 k2]
@@ -36,8 +37,11 @@
                  tasks))
 
 (defn get-tasks [tasks]
-  (doseq [task (sort-by-prio tasks)]
-    (println (prettify-task task))))
+  (println "--- Tasks sorted by Priority ---")
+  (doseq [[id task] (sort-by-prio tasks)]
+    (if (.isAfter (:due-date task) (LocalDateTime/now))
+      (println (prettify-task id task))
+      (println "OVERDUE" (prettify-task id task)))))
 
 (defn task-amount [tasks]
   (count tasks))
