@@ -21,6 +21,33 @@
           (println "Priority must be within 1 and 4")
           tasks)))))
 
+(defn edit-command [tasks]
+  (print "Enter task id to edit: ")
+  (flush)
+  (let [id (Integer/parseInt (read-line))]
+    (if (tasks/task-exists tasks id)
+      (do
+        (println "Editing task with id" id)
+        (print "Enter new description: ")
+        (flush)
+        (let [desc (read-line)]
+          (print "Enter new priority (1-4): ")
+          (flush)
+          (let [prio (Integer/parseInt (read-line))]
+            (if (tasks/check-prio prio)
+              (do
+                (print "Enter new due date (example: 2011-12-03T10:15): ")
+                (flush)
+                (let [due (LocalDateTime/parse (read-line))]
+                  (println "Set description of" id "to" desc "with priority" prio "and due date" (.format due (DateTimeFormatter/ISO_DATE_TIME)))
+                  (tasks/update-task tasks id (tasks/create-task desc prio due))))
+              (do
+                (println "Priority must be within 1 and 4")
+                tasks)))))
+      (do
+        (println "Task with id" id "does not exist")
+        tasks))))
+
 (defn delete-command [tasks]
   (print "Enter task id to delete: ")
   (flush)
@@ -40,10 +67,11 @@
   tasks)
 
 (defn command-input [tasks]
-  (println "Available commands: create, delete, list, quit")
+  (println "Available commands: create, edit, delete, list, quit")
   (let [cmd (read-line)]
     (case cmd
       "create" (create-command tasks)
+      "edit" (edit-command tasks)
       "delete" (delete-command tasks)
       "list" (list-command tasks)
       "quit" (println "Bye!")

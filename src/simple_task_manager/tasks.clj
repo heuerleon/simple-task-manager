@@ -21,6 +21,10 @@
     (new-task-id tasks)
     new-task))
 
+(defn update-task [tasks id new-task]
+  (dissoc tasks id)
+  (assoc tasks id new-task))
+
 (defn task-exists [tasks id]
   (contains? tasks id))
 
